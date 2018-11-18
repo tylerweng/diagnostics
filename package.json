@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "actions-on-google": "^2.5.0",
+    "redis": "^2.8.0"
+  }
+}
