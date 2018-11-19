@@ -11,13 +11,16 @@ const bodyParser = require('body-parser')
 
 const express = require('express')
 const router = express.Router()
+const redisClient = createClient()
 
 router.post('/set', (req, res) => {
-  console.log("Received POST req to /set")
   const redisClient = createClient()
   setVal(redisClient, req.body.key, req.body.value)
-  exitClient(redisClient)
-  res.sendStatus(200)
+  res.json({
+    speech: 'speech',
+    displayText: 'displayText',
+    source: 'source'
+  });
 })
 
 const app = express()
