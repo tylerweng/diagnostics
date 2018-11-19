@@ -14,13 +14,22 @@ const router = express.Router()
 const redisClient = createClient()
 
 router.post('/set', (req, res) => {
-  const redisClient = createClient()
   setVal(redisClient, req.body.key, req.body.value)
   res.json({
     speech: 'speech',
     displayText: 'displayText',
     source: 'source'
   });
+})
+
+router.get('/licks', (req, res) => {
+  redisClient.get("licks", (err, licks) =>
+    res.json({
+      speech: licks,
+      displayText: licks,
+      source: 'source'
+    })
+  )
 })
 
 const app = express()
