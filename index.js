@@ -14,6 +14,7 @@ const router = express.Router()
 const redisClient = createClient()
 
 router.post('/set', (req, res) => {
+  console.log(`POST req to /redis/set`)
   setVal(redisClient, req.body.key, req.body.value)
   res.json({
     speech: 'speech',
@@ -23,6 +24,7 @@ router.post('/set', (req, res) => {
 })
 
 router.get('/licks', (req, res) => {
+  console.log(`GET req to /redis/licks`)
   redisClient.get("licks", (err, licks) =>
     res.json({
       speech: licks,
