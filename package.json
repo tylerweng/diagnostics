@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "actions-on-google": "^2.5.0",
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "redis": "^2.8.0"
   }

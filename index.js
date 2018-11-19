@@ -1,42 +1,30 @@
 // Import the appropriate service and chosen wrappers
-const {
-  actionssdk,
-  Image,
-} = require('actions-on-google')
+// const {
+//   actionssdk,
+//   dialogflow
+// } = require('actions-on-google')
+
 
 const {createClient, setVal, getVal, exitClient} = require('./database.js')
 
+const bodyParser = require('body-parser')
+
 const express = require('express')
+const router = express.Router()
 
-// setVal(redisClient, "kappa", 1)
-// setVal(redisClient, "keepo", 1)
-// exitClient(redisClient)
+router.post('/set', (req, res) => {
+  console.log("Received POST req to /set")
+  const redisClient = createClient()
+  setVal(redisClient, req.body.key, req.body.value)
+  exitClient(redisClient)
+  res.sendStatus(200)
+})
 
-// Create an app instance
-const redisClient = createClient();
+const app = express()
+const PORT = process.env.PORT || 3000
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 
-// Register handlers for Actions SDK intents
+app.use('/redis', router)
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`))
 
-const PORT = process.env.PORT || 5000
-express()
-  .get('/', (req, res) => {
-    console.log(`Received GET req to /`)
-    const app = actionssdk()
-    app.intent('actions.intent.MAIN', conv => {
-      conv.ask('Welcome to diagnostics!')
-      conv.ask('Here are a list of actions you may take: how many, bye, cancel')
-    })
-    
-    app.intent('actions.intent.TEXT', (conv, input) => {
-      if (input === 'bye' || input === 'cancel') {
-        return conv.close('See you later!')
-      } else if (input === 'how many?') {
-        const numberOfLicks = getVal(redisClient, 'licks')
-        conv.ask(`You have ${numberOfLicks} licks`)
-        conv.ask('Any other commands?')
-      } else {
-        conv.ask(`I didn't understand. Can you tell me something else?`)
-      }
-    })
-  })
-  .listen(PORT, () => console.log(`Listening on port: ${PORT}`))
